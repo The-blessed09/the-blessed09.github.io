@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Checkout - The Blessed Hats</title>
+<style>
+body {margin:0;font-family:Arial;background:black;color:white;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:12px;background: rgba(20,20,20,0.6);backdrop-filter: blur(10px);}
+.header img{height:40px;}
+.header h1{margin:0;font-size:20px;}
+.container{max-width:600px;margin:auto;padding:20px;}
+.cart-item{display:flex;align-items:center;justify-content:space-between;background:rgba(30,30,30,0.8);border-radius:15px;padding:10px;margin-bottom:10px;}
+.cart-item img{height:50px;width:50px;object-fit:cover;border-radius:5px;}
+.total{text-align:right;font-weight:bold;margin-top:10px;font-size:18px;}
+.payment-method{display:flex;align-items:center;justify-content:space-between;background:rgba(50,50,50,0.9);padding:10px;border-radius:10px;margin-bottom:10px;cursor:pointer;}
+.payment-method img{height:30px;width:30px;}
+.pay-btn{width:100%;background:green;color:white;font-weight:bold;padding:12px;border:none;border-radius:10px;font-size:16px;cursor:pointer;}
+.info-box{background:rgba(30,30,30,0.8);padding:15px;border-radius:15px;margin-bottom:20px;font-size:16px;text-align:center;line-height:1.5;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="logo.png" alt="Logo">
+  <h1>The Blessed Hats</h1>
+</div>
+
+<div class="container">
+  <h2>Tu Carrito</h2>
+  <div id="cartItems"></div>
+  <div class="total">Total: $<span id="cartTotal">0</span></div>
+
+  <div class="info-box">
+    Nuestros envíos son 100% confiables y rastreables así que no te preocupes por la seguridad de tu paquete, también cabe aclarar que el envío puede ser un poco tardío pero al finalizar la compra le llegará un correo en dónde vendrá el código de pedido para rastrearlo; agradecemos de todo corazón su compra ya que gracias a usted podemos implementar nuevas cosas y por supuesto, podemos mejorar la calidad de nuestra marca. 🚚📦🥇✅
+  </div>
+
+  <h3>Métodos de pago</h3>
+  <div class="payment-method" onclick="alert('Oxxo seleccionado')">
+    <span>Oxxo</span>
+    <img src="oxxo.png" alt="Oxxo">
+  </div>
+  <div class="payment-method" onclick="alert('Paypal seleccionado')">
+    <span>Paypal</span>
+    <img src="paypal.png" alt="Paypal">
+  </div>
+  <div class="payment-method" onclick="alert('MasterCard seleccionado')">
+    <span>MasterCard</span>
+    <img src="mastercard.png" alt="MasterCard">
+  </div>
+  <div class="payment-method" onclick="alert('CreditCard seleccionado')">
+    <span>CreditCard</span>
+    <img src="card.png" alt="CreditCard">
+  </div>
+</div>
+
+<script>
+// Carrito
+let carrito=JSON.parse(localStorage.getItem("carrito"))||[];
+function updateCart(){
+  const container=document.getElementById("cartItems");
+  container.innerHTML="";
+  let total=0;
+  carrito.forEach(item=>{
+    total+=item.precio;
+    const div=document.createElement("div");
+    div.className="cart-item";
+    div.innerHTML=`<img src="${item.img}"><span>${item.nombre} $${item.precio}</span>`;
+    container.appendChild(div);
+  });
+  document.getElementById("cartTotal").innerText=total;
+}
+updateCart();
+</script>
+
+</body>
+</html>
