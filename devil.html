@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Devil Magic - The Blessed Hats</title>
+<style>
+body{margin:0;font-family:Arial;background:black;color:white;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:12px;background:rgba(20,20,20,0.6);backdrop-filter:blur(10px);}
+.header img{height:40px;}
+.header h1{margin:0;font-size:20px;}
+.cart{position:relative;font-size:22px;cursor:pointer;}
+.cart-count{position:absolute;top:-5px;right:-8px;background:red;color:white;font-size:12px;padding:2px 6px;border-radius:50%;}
+.container{padding:20px;max-width:900px;margin:auto;}
+.gallery{display:flex;overflow-x:auto;gap:10px;margin-bottom:20px;}
+.gallery img{height:250px;border-radius:15px;cursor:pointer;transition:0.3s;}
+.gallery img:hover{transform:scale(1.05);}
+.info-box{background:rgba(30,30,30,0.8);padding:15px;border-radius:15px;margin-bottom:20px;font-size:18px;text-align:center;line-height:1.5;}
+.add-cart-btn{width:100%;background:#5dade2;color:white;font-weight:bold;padding:12px;border:none;border-radius:10px;font-size:16px;cursor:pointer;margin-bottom:15px;}
+.pay-btn{width:100%;background:green;color:white;font-weight:bold;padding:12px;border:none;border-radius:10px;font-size:16px;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="logo.png" alt="Logo">
+  <h1>The Blessed Hats</h1>
+  <div class="cart" onclick="toggleCart()">🛒<div id="count" class="cart-count">0</div></div>
+</div>
+
+<div id="cartPanel" style="display:none;position:absolute;top:50px;right:0;width:320px;background:rgba(30,30,30,0.95);backdrop-filter:blur(10px);padding:15px;border-radius:15px;max-height:400px;overflow-y:auto;">
+  <h3>Carrito</h3>
+  <div id="cartItems"></div>
+  <div class="total" style="text-align:right;font-weight:bold;margin-top:10px;">Total: $<span id="cartTotal">0</span></div>
+  <button class="pay-btn" onclick="checkout()">Pagar ahora</button>
+</div>
+
+<div class="container">
+  <h2 style="text-align:center;margin-bottom:20px;">Devil Magic</h2>
+  <div class="gallery" id="gallery">
+    <img src="devil.png" alt="Devil Magic">
+    <img src="devil2.png" alt="Devil Magic">
+    <img src="devil3.png" alt="Devil Magic">
+    <img src="devil4.png" alt="Devil Magic">
+  </div>
+  <button class="add-cart-btn" onclick="addToCart('Devil Magic',900,'devil.png')">Agregar al carrito - $900</button>
+  <div class="info-box">
+    Está gorra pertenece al drop "BLESSED DEITY", únicamente hay 4 piezas en existencia y todas incluyen chip nfc para evitar clonaciones; cada gorra viene con full set el cual incluye caja, cubre polvos y certificado de autenticidad, estamos mejorando cada vez más la calidad de nuestros productos, nuestros envíos son confiables y al momento de su compra se le proporcionará el código de envío para que pueda rastrearlo en todo momento, gracias por su preferencia 📦🚚🥇
+  </div>
+  <h3 style="text-align:center;margin-bottom:10px;">Más productos...</h3>
+  <div class="gallery">
+    <img src="star.png" alt="Star Cat" onclick="location.href='star.html'">
+    <img src="good.png" alt="Good Demon" onclick="location.href='good.html'">
+    <img src="blessed.png" alt="Blessed Bandit" onclick="location.href='blessed.html'">
+  </div>
+</div>
+
+<script>
+let carrito=JSON.parse(localStorage.getItem("carrito"))||[];
+function saveCart(){localStorage.setItem("carrito",JSON.stringify(carrito));updateCart();}
+function updateCart(){document.getElementById("count").innerText=carrito.length;renderCart();}
+function addToCart(nombre,precio,img){carrito.push({nombre,precio,img});saveCart();}
+updateCart();
+function toggleCart(){const panel=document.getElementById("cartPanel");panel.style.display = panel.style.display==="block"?"none":"block";}
+function renderCart(){
+  const container=document.getElementById("cartItems");
+  container.innerHTML="";
+  let total=0;
+  carrito.forEach((item,i)=>{
+    total+=item.precio;
+    const div=document.createElement("div");
+    div.style.display="flex";div.style.justifyContent="space-between";div.style.alignItems="center";div.style.margin="8px 0";
+    div.innerHTML=`<img src="${item.img}" style="width:50px;height:50px;border-radius:5px;"><span>${item.nombre} $${item.precio}</span><button style="background:red;color:white;border:none;border-radius:5px;padding:2px 6px;cursor:pointer;" onclick="removeCart(${i})">X</button>`;
+    container.appendChild(div);
+  });
+  document.getElementById("cartTotal").innerText=total;
+}
+function removeCart(i){carrito.splice(i,1);saveCart();}
+function checkout(){if(carrito.length===0){alert("El carrito está vacío."); return;} window.location.href="checkout.html";}
+</script>
+
+</body>
+</html>
