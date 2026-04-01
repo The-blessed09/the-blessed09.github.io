@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>The Blessed Hats</title>
+<style>
+body{margin:0;font-family:Arial;background:black;color:white;}
+
+/* HEADER */
+.header{
+position:sticky;top:0;
+display:flex;justify-content:space-between;align-items:center;
+padding:12px;
+backdrop-filter:blur(10px);
+background:rgba(20,20,20,0.6);
+}
+
+/* CARRITO */
+.cart{position:relative;font-size:22px;cursor:pointer;}
+.cart-count{
+position:absolute;top:-5px;right:-8px;
+background:red;color:white;font-size:12px;
+padding:2px 6px;border-radius:50%;
+}
+
+/* GRID DE PRODUCTOS */
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;padding:15px;
+}
+
+.card{
+background:#111;border-radius:15px;
+overflow:hidden;text-align:center;
+cursor:pointer;
+transition:transform 0.2s;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.card img{
+width:100%;height:150px;
+object-fit:contain;background:#000;
+}
+
+/* MODAL CARRITO */
+.modal{
+position:fixed;top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,0.8);
+display:none;justify-content:center;align-items:center;
+}
+
+.box{
+background:#111;padding:20px;border-radius:20px;width:90%;
+}
+
+button{
+padding:10px;margin:5px;border:none;border-radius:8px;
+cursor:pointer;
+}
+
+/* CHECKOUT */
+.checkout{
+display:none;padding:20px;text-align:center;
+}
+
+/* PRODUCTOS EN CHECKOUT */
+.product-box{
+display:flex;
+align-items:center;
+justify-content:space-between;
+background:#111;
+padding:15px;
+margin:10px auto;
+border-radius:15px;
+width:90%;
+}
+
+.product-box img{
+width:80px;
+height:80px;
+object-fit:contain;
+background:#000;
+border-radius:10px;
+}
+
+.product-info{
+text-align:left;
+flex:1;
+margin-left:15px;
+}
+
+/* INFORMACIÓN DE ENVÍO */
+.info{
+background:#111;padding:15px;border-radius:15px;margin-top:15px;
+font-size:16px;
+text-align:center;
+}
+
+/* PAGOS */
+.pay-section{
+width:90%;
+margin:20px auto;
+}
+
+.pay-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px;
+margin:10px 0;
+border-radius:12px;
+font-weight:bold;
+}
+
+.pay-row img{
+width:50px;
+height:30px;
+object-fit:contain;
+}
+
+/* COLORES DE PAGOS */
+.oxxo{background:#ff4d4d;}
+.paypal{background:#66ccff;}
+.master{background:#ff9933;}
+.cardp{background:#66cc66;}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div>The Blessed Hats</div>
+<div class="cart" onclick="abrirCarrito()">
+🛒<div id="count" class="cart-count">0</div>
+</div>
+</div>
+
+<!-- GRID DE PRODUCTOS -->
+<div class="grid">
+
+<div class="card" onclick="location.href='star-cat.html'">
+<img src="star.png">
+<p>Star Cat $850</p>
+</div>
+
+<div class="card" onclick="location.href='good-demon.html'">
+<img src="good.png">
+<p>Good Demon $850</p>
+</div>
+
+<div class="card" onclick="location.href='devil-magic.html'">
+<img src="devil.png">
+<p>Devil Magic $900</p>
+</div>
+
+<div class="card" onclick="location.href='blessed-bandit.html'">
+<img src="blessed.png">
+<p>Blessed Bandit $850</p>
+</div>
+
+</div>
+
+<!-- MODAL CARRITO -->
+<div class="modal" id="modal">
+<div class="box">
+<h2>Carrito</h2>
+<div id="items"></div>
+<h3 id="total"></h3>
+<button onclick="pagar()">Pagar</button>
+<button onclick="cerrar()">Cerrar</button>
+</div>
+</div>
+
+<!-- CHECKOUT -->
+<div class="checkout" id="checkout">
+<h2>Checkout</h2>
+<div id="resumen"></div>
+
+<div class="info">
+nuestros envíos son 100% confiables y rastreables así que no te preocupes por la seguridad de tu paquete, también cabe aclarar que el envío puede ser un poco tardío pero al finalizar la compra le llegará un correo en dónde vendrá el código de pedido para rastrearlo; agradecemos de todo corazón su compra ya que gracias a usted podemos implementar nuevas cosas y por supuesto, podemos mejorar la calidad de nuestra marca. 🚚📦🥇✅
+</div>
+
+<!-- PAGOS -->
+<div class="pay-section">
+
+<div class="pay-row oxxo">
+<span>Oxxo</span>
+<img src="oxxo.png">
+</div>
+
+<div class="pay-row paypal">
+<span>PayPal</span>
+<img src="paypal.png">
+</div>
+
+<div class="pay-row master">
+<span>MasterCard</span>
+<img src="mastercard.png">
+</div>
+
+<div class="pay-row cardp">
+<span>Credit Card</span>
+<img src="card.png">
+</div>
+
+</div>
+
+<script>
+let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+function save(){localStorage.setItem("carrito", JSON.stringify(carrito)); update();}
+function update(){document.getElementById("count").innerText = carrito.length;}
+
+function add(nombre,precio,img){carrito.push({nombre,precio,img}); save();}
+function eliminar(i){carrito.splice(i,1); save(); abrirCarrito();}
+
+function abrirCarrito(){
+let html="";
+let total=0;
+carrito.forEach((p,i)=>{
+html += `
+<div class="product-box">
+  <div class="product-info">
+    <p>${p.nombre} - $${p.precio}</p>
+  </div>
+  <button onclick="eliminar(${i})">❌</button>
+</div>`;
+total += p.precio;
+});
+document.getElementById("items").innerHTML=html;
+document.getElementById("total").innerText="Total: $"+total+" MXN";
+document.getElementById("modal").style.display="flex";
+}
+
+function cerrar(){document.getElementById("modal").style.display="none";}
+
+function pagar(){
+document.getElementById("modal").style.display="none";
+document.querySelector(".grid").style.display="none";
+document.getElementById("checkout").style.display="block";
+
+let html="";
+let total=0;
+carrito.forEach(p=>{
+html += `
+<div class="product-box">
+  <img src="${p.img}" onerror="this.src='star.png'">
+  <div class="product-info">
+    <p>${p.nombre}</p>
+    <p>$${p.precio} MXN</p>
+  </div>
+</div>
+`;
+total += p.precio;
+});
+html += `<h2 style="margin-top:15px;">Total: $${total} MXN</h2>`;
+document.getElementById("resumen").innerHTML=html;
+}
+
+update();
+</script>
+
+</body>
+</html>
