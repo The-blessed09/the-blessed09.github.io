@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>The Blessed Hats - Pago</title>
+<style>
+body{margin:0;font-family:Arial;background:black;color:white;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:12px;background:rgba(20,20,20,0.6);backdrop-filter:blur(10px);}
+.header img{height:40px;}
+.header h1{margin:0;font-size:20px;}
+.cart-count{background:red;color:white;font-size:12px;padding:2px 6px;border-radius:50%;margin-left:5px;}
+.container{padding:20px;max-width:900px;margin:auto;}
+.product-box{display:flex;align-items:center;gap:15px;background:rgba(30,30,30,0.8);padding:15px;border-radius:15px;margin-bottom:20px;}
+.product-box img{width:120px;height:120px;object-fit:contain;border-radius:10px;}
+.product-info{flex:1;}
+.product-info p{margin:5px 0;font-size:18px;}
+.info-box{background:rgba(30,30,30,0.8);padding:15px;border-radius:15px;margin-bottom:20px;font-size:18px;text-align:center;line-height:1.5;}
+.payments{display:flex;gap:15px;flex-wrap:wrap;justify-content:center;}
+.pay-btn{flex:1;display:flex;justify-content:space-between;align-items:center;padding:10px 15px;border-radius:12px;font-weight:bold;cursor:pointer;font-size:16px;border:none;}
+.oxxo{background:#f25c5c;color:white;}
+.paypal{background:#5dade2;color:white;}
+.mastercard{background:#f39c12;color:white;}
+.creditcard{background:#27ae60;color:white;}
+.pay-btn img{height:25px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="logo.png" alt="Logo">
+  <h1>The Blessed Hats</h1>
+  <div>🛒<span class="cart-count" id="count">0</span></div>
+</div>
+
+<div class="container">
+  <h2 style="text-align:center;margin-bottom:20px;">Resumen de tu compra</h2>
+  
+  <!-- Productos del carrito -->
+  <div id="cartItemsContainer"></div>
+
+  <!-- Texto de seguridad/envío -->
+  <div class="info-box">
+    Nuestros envíos son 100% confiables y rastreables así que no te preocupes por la seguridad de tu paquete, también cabe aclarar que el envío puede ser un poco tardío pero al finalizar la compra le llegará un correo en dónde vendrá el código de pedido para rastrearlo; agradecemos de todo corazón su compra ya que gracias a usted podemos implementar nuevas cosas y por supuesto, podemos mejorar la calidad de nuestra marca. 🚚📦🥇✅
+  </div>
+
+  <!-- Métodos de pago -->
+  <h3 style="text-align:center;margin-bottom:10px;">Selecciona un método de pago</h3>
+  <div class="payments">
+    <button class="pay-btn oxxo" onclick="pay('Oxxo')">
+      <span>Oxxo</span>
+      <img src="oxxo-logo.png" alt="Oxxo">
+    </button>
+    <button class="pay-btn paypal" onclick="pay('Paypal')">
+      <span>Paypal</span>
+      <img src="paypal-logo.png" alt="Paypal">
+    </button>
+    <button class="pay-btn mastercard" onclick="pay('MasterCard')">
+      <span>MasterCard</span>
+      <img src="mastercard-logo.png" alt="MasterCard">
+    </button>
+    <button class="pay-btn creditcard" onclick="pay('CreditCard')">
+      <span>CreditCard</span>
+      <img src="creditcard-logo.png" alt="CreditCard">
+    </button>
+  </div>
+</div>
+
+<script>
+// Cargar carrito desde localStorage
+let carrito=JSON.parse(localStorage.getItem("carrito"))||[];
+
+function updateCartCount(){document.getElementById("count").innerText=carrito.length;}
+updateCartCount();
+
+// Renderizar productos
+function renderCart(){
+  const container=document.getElementById("cartItemsContainer");
+  container.innerHTML="";
+  carrito.forEach(item=>{
+    const div=document.createElement("div");
+    div.className="product-box";
+    div.innerHTML=`<img src="${item.img}" alt="${item.nombre}">
+                     <div class="product-info">
+                       <p>${item.nombre}</p>
+                       <p>Precio: $${item.precio}</p>
+                     </div>`;
+    container.appendChild(div);
+  });
+}
+renderCart();
+
+// Función de pago
+function pay(method){
+  if(carrito.length===0){alert("El carrito está vacío.");return;}
+  alert("Método de pago seleccionado: " + method + "\nTotal: $" + carrito.reduce((a,b)=>a+b.precio,0));
+  // Aquí podrías redirigir a un sistema real de pago
+}
+</script>
+
+</body>
+</html>
