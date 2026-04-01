@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>The Blessed Hats - Tienda</title>
+<style>
+body{margin:0;font-family:Arial;background:black;color:white;}
+.header{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;padding:12px;background:rgba(20,20,20,0.6);backdrop-filter:blur(10px);z-index:10;}
+.header img{height:40px;}
+.header h1{margin:0;font-size:20px;}
+.cart{position:relative;font-size:22px;cursor:pointer;}
+.cart-count{position:absolute;top:-5px;right:-8px;background:red;color:white;font-size:12px;padding:2px 6px;border-radius:50%;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:20px;}
+.card{background:#111;border-radius:15px;overflow:hidden;text-align:center;cursor:pointer;transition:0.3s;}
+.card:hover{transform:scale(1.05);}
+.card img{width:100%;height:250px;object-fit:contain;background:#000;border-radius:15px 15px 0 0;}
+.card p{margin:10px 0;color:white;font-weight:bold;font-size:18px;}
+
+/* Carrito emergente */
+.cart-panel{display:none;position:absolute;top:50px;right:0;width:300px;background:rgba(30,30,30,0.95);backdrop-filter:blur(10px);padding:15px;border-radius:15px;max-height:400px;overflow-y:auto;}
+.cart-panel h3{margin-top:0;text-align:center;}
+.cart-item{display:flex;justify-content:space-between;align-items:center;margin:8px 0;}
+.cart-item img{width:50px;height:50px;object-fit:contain;border-radius:5px;}
+.cart-item button{background:red;color:white;border:none;border-radius:5px;padding:2px 6px;cursor:pointer;}
+.total{text-align:right;font-weight:bold;margin-top:10px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="logo.png" alt="Logo">
+  <h1>The Blessed Hats</h1>
+  <div class="cart" onclick="toggleCart()">🛒<div id="count" class="cart-count">0</div></div>
+</div>
+
+<!-- Panel del carrito -->
+<div id="cartPanel" class="cart-panel">
+  <h3>Carrito</h3>
+  <div id="cartItems"></div>
+  <div class="total">Total: $<span id="cartTotal">0</span></div>
+</div>
+
+<h2 style="text-align:center;margin-top:20px;">Catálogo de gorras</h2>
+<div class="grid">
+  <div class="card" onclick="location.href='star.html'">
+    <img src="star.png" alt="Star Cat">
+    <p>Star Cat $850</p>
+  </div>
+  <div class="card" onclick="location.href='good.html'">
+    <img src="good.png" alt="Good Demon">
+    <p>Good Demon $850</p>
+  </div>
+  <div class="card" onclick="location.href='blessed.html'">
+    <img src="blessed.png" alt="Blessed Bandit">
+    <p>Blessed Bandit $850</p>
+  </div>
+  <div class="card" onclick="location.href='devil.html'">
+    <img src="devil.png" alt="Devil Magic">
+    <p>Devil Magic $900</p>
+  </div>
+</div>
+
+<script>
+let carrito=JSON.parse(localStorage.getItem("carrito"))||[];
+function save(){localStorage.setItem("carrito",JSON.stringify(carrito));update();}
+function update(){document.getElementById("count").innerText=carrito.length;renderCart();}
+function add(nombre,precio,img){carrito.push({nombre,precio,img});save();}
+update();
+
+function toggleCart(){
+  const panel = document.getElementById("cartPanel");
+  panel.style.display = panel.style.display==="block"?"none":"block";
+}
+
+function renderCart(){
+  const container = document.getElementById("cartItems");
+  container.innerHTML="";
+  let total=0;
+  carrito.forEach((item,i)=>{
+    total+=item.precio;
+    const div=document.createElement("div");
+    div.className="cart-item";
+    div.innerHTML=`<img src="${item.img}" alt="${item.nombre}"><span>${item.nombre} $${item.precio}</span><button onclick="remove(${i})">X</button>`;
+    container.appendChild(div);
+  });
+  document.getElementById("cartTotal").innerText=total;
+}
+
+function remove(index){
+  carrito.splice(index,1);
+  save();
+}
+</script>
+
+</body>
+</html>
