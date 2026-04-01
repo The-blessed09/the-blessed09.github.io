@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Star Cat</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:black;
+  color:white;
+  text-align:center;
+}
+
+/* TÍTULO */
+.header{
+  padding:25px 0 10px;
+  font-size:28px;
+  font-weight:bold;
+}
+
+/* CAJA */
+.box{
+  width:95%;
+  max-width:500px;
+  margin:20px auto;
+  background:#111;
+  border-radius:25px;
+  padding:20px;
+  box-shadow:0 0 30px rgba(255,255,255,0.08);
+}
+
+/* CARRUSEL */
+.carousel{
+  display:flex;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  border-radius:20px;
+}
+
+.carousel img{
+  width:100%;
+  height:380px;
+  object-fit:cover;
+  flex-shrink:0;
+  scroll-snap-align:center;
+  border-radius:20px;
+}
+
+/* TEXTO */
+.desc{
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.8;
+}
+
+.price{
+  font-size:26px;
+  margin:15px 0;
+  font-weight:bold;
+}
+
+/* CANTIDAD */
+.qty-box{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:15px 0;
+  gap:15px;
+}
+
+.qty-btn{
+  background:white;
+  color:black;
+  border:none;
+  border-radius:10px;
+  width:40px;
+  height:40px;
+  font-size:20px;
+}
+
+.qty-number{
+  font-size:20px;
+  width:40px;
+}
+
+/* BOTONES */
+button{
+  width:90%;
+  padding:18px;
+  margin:10px auto;
+  border:none;
+  border-radius:15px;
+  font-size:18px;
+  display:block;
+}
+
+.buy{
+  background:#00cfff;
+  color:black;
+}
+
+.cart{
+  background:white;
+  color:black;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">Star Cat</div>
+
+<div class="box">
+
+  <!-- CARRUSEL -->
+  <div class="carousel">
+    <img src="star1.png">
+    <img src="star2.png">
+    <img src="star3.png">
+    <img src="star4.png">
+  </div>
+
+  <div class="desc">Gorra premium edición Blessed Deity</div>
+
+  <div class="price">$850 MXN</div>
+
+  <!-- 🔥 CANTIDAD -->
+  <div class="qty-box">
+    <button class="qty-btn" onclick="menos()">-</button>
+    <div class="qty-number" id="cantidad">1</div>
+    <button class="qty-btn" onclick="mas()">+</button>
+  </div>
+
+  <button class="buy">Comprar ahora</button>
+  <button class="cart">Añadir al carrito</button>
+
+</div>
+
+<script>
+let cantidad = 1;
+
+function mas(){
+  if(cantidad < 4){
+    cantidad++;
+    document.getElementById("cantidad").innerText = cantidad;
+  }
+}
+
+function menos(){
+  if(cantidad > 1){
+    cantidad--;
+    document.getElementById("cantidad").innerText = cantidad;
+  }
+}
+</script>
+
+</body>
+  </html>
