@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Star Cat - The Blessed Hats</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:white;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+h1{
+  margin-top:30px;
+  font-size:22px;
+}
+.product-img{
+  width:280px;
+  height:280px;
+  object-fit:contain;
+  margin-top:20px;
+}
+.product-name{
+  font-size:22px;
+  margin-top:15px;
+  color:pink;
+}
+.info-box{
+  width:85%;
+  max-width:420px;
+  background:#f5f5f5;
+  border-radius:18px;
+  padding:20px;
+  margin-top:25px;
+  box-shadow:0 6px 12px rgba(0,0,0,0.12);
+  text-align:center;
+}
+.alert{
+  color:red;
+  font-weight:bold;
+  margin-bottom:10px;
+  display:none;
+}
+.drop{
+  color:gold;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>The Blessed Hats</h1>
+
+<img src="star.png" class="product-img">
+
+<div class="product-name">Star Cat</div>
+
+<div class="info-box">
+  <div id="alert" class="alert">⚠️ Posible clonación</div>
+  <div>Drop: <span class="drop">Blessed Deity</span></div>
+  <div>Gorra: Star Cat</div>
+  <div>Serie: <span id="serie"></span></div>
+  <div>Escaneos: <span id="scans"></span></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD9pRqLGAhEFIjueCK6PxWXFxWb_tnUBcg",
+  authDomain: "autenticidad-8dad7.firebaseapp.com",
+  projectId: "autenticidad-8dad7",
+  storageBucket: "autenticidad-8dad7.firebasestorage.app",
+  messagingSenderId: "613750291310",
+  appId: "1:613750291310:web:d6eeacf20efd1e2ee05f7f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// IDs válidos
+const validIDs=["TBH01SC","TBH02SC","TBH03SC","TBH04SC"];
+
+let id=new URLSearchParams(location.search).get("id");
+if(!validIDs.includes(id)) id="TBH01SC";
+
+// Serie
+let num=id.replace("TBH","").replace("SC","");
+document.getElementById("serie").innerText=num.padStart(2,'0')+"/04";
+
+// 🔥 REFERENCIA
+const ref = doc(db, "gorras", id);
+
+// 🔥 ACTUALIZAR scans
+await setDoc(ref, { scans: increment(1) }, { merge: true });
+
+// 🔥 LEER valor real
+const snap = await getDoc(ref);
+const count = snap.data().scans;
+
+// Mostrar
+document.getElementById("scans").innerText = count;
+
+// Alerta
+if(count >= 22){
+  document.getElementById("alert").style.display = "block";
+}
+</script>
+
+</body>
+</html>
