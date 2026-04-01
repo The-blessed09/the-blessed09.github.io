@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Panel Admin - The Blessed Hats</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#111;
+  color:white;
+  padding:20px;
+}
+h1{text-align:center;}
+.login{
+  max-width:300px;
+  margin:80px auto;
+  display:flex;
+  flex-direction:column;
+}
+input{
+  padding:10px;
+  margin:5px 0;
+  border:none;
+  border-radius:8px;
+}
+button{
+  padding:10px;
+  background:#00ff88;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+}
+.panel{display:none;}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
+th, td{
+  padding:10px;
+  text-align:center;
+}
+.alert{color:red;}
+</style>
+</head>
+
+<body>
+
+<div id="loginBox" class="login">
+  <h1>Login Admin</h1>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Entrar</button>
+</div>
+
+<div id="panel" class="panel">
+  <h1>📊 Panel - The Blessed Hats</h1>
+  <button onclick="logout()">Cerrar sesión</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Modelo</th>
+        <th>Scans</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody id="tabla"></tbody>
+  </table>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD9pRqLGAhEFIjueCK6PxWXFxWb_tnUBcg",
+  authDomain: "autenticidad-8dad7.firebaseapp.com",
+  projectId: "autenticidad-8dad7",
+  storageBucket: "autenticidad-8dad7.firebasestorage.app",
+  messagingSenderId: "613750291310",
+  appId: "1:613750291310:web:d6eeacf20efd1e2ee05f7f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// 🔐 LOGIN
+window.login = async () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  try{
+    await signInWithEmailAndPassword(auth, email, password);
+  }catch(e){
+    alert("Error de login");
+  }
+};
+
+// 🔓 LOGOUT
+window.logout = () => {
+  signOut(auth);
+};
+
+// 🔁 ESTADO LOGIN
+onAuthStateChanged(auth, user => {
+  if(user){
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("panel").style.display="block";
+    cargarDatos();
+  }else{
+    document.getElementById("loginBox").style.display="block";
+    document.getElementById("panel").style.display="none";
+  }
+});
+
+// ⚡ REALTIME
+function cargarDatos(){
+  const tabla = document.getElementById("tabla");
+
+  onSnapshot(collection(db,"gorras"), (snapshot)=>{
+    tabla.innerHTML = "";
+
+    snapshot.forEach(docSnap=>{
+      const data = docSnap.data();
+      const scans = data.scans || 0;
+      const id = docSnap.id;
+
+      let modelo="Unknown";
+      if(id.includes("LW")) modelo="Little White";
+      if(id.includes("DM")) modelo="Devil Magic";
+      if(id.includes("BB")) modelo="Blessed Bandit";
+      if(id.includes("SC")) modelo="Star Cat";
+      if(id.includes("GD")) modelo="Good Demon";
+
+      let estado="Normal";
+      let clase="";
+      if(scans>=22){
+        estado="Clonación ⚠️";
+        clase="alert";
+      }
+
+      tabla.innerHTML += `
+        <tr>
+          <td>${id}</td>
+          <td>${modelo}</td>
+          <td>${scans}</td>
+          <td class="${clase}">${estado}</td>
+        </tr>
+      `;
+    });
+  });
+}
+</script>
+
+</body>
+  </html>
